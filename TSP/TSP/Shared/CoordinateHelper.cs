@@ -8,5 +8,15 @@ namespace TSP
         {
             return new List<Coordinate>();
         }
+
+        public void TotalRouteDistance()
+        {
+
+        }
+        
+        public double DistanceBetweenPoints(Coordinate one, Coordinate two)
+        {   
+            throw new NotImplementedException();
+        }
     }
 }
