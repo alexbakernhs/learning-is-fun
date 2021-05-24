@@ -4,6 +4,10 @@
 ARG VARIANT="5.0"
 FROM mcr.microsoft.com/vscode/devcontainers/dotnet:0-${VARIANT}
 
+ENV no_proxy "patientcommsapp,dischargeapp,premapp,172.25.0.4,127.0.0.1,localhost,dev.kmh.nhs.uk"
+ENV http_proxy http://squid.kmh.nhs.uk:3128
+ENV https_proxy http://squid.kmh.nhs.uk:3128
+
 # [Option] Install Node.js
 ARG INSTALL_NODE="true"
 ARG NODE_VERSION="lts/*"
