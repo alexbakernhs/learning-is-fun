@@ -130,5 +130,73 @@ namespace Tests
             Assert.Single(coords.Where(w => w.IsStart));
         }
 
+        [Fact]
+        public void DistanceBetweenPoints_Success()
+        {
+            //Arrange
+            var helper = GetCoordinateHelper();
+            var coordOne = new Coordinate(0, 0, false);
+            var coordTwo = new Coordinate(3, 4, false);
+
+            //Act
+            var distance = helper.DistanceBetweenPoints(coordOne, coordTwo);
+
+            //Assert
+            Assert.Equal(5, distance);
+        }
+
+        [Fact]
+        public void DistanceBetweenPoints_CoordOneNull_ArgumentException()
+        {
+            //Arrange
+            var helper = GetCoordinateHelper();
+            Coordinate coordOne = null;
+            Coordinate coordTwo = new Coordinate(3, 4, false);
+
+            //Act && Assert
+            Assert.Throws<ArgumentException>(() => helper.DistanceBetweenPoints(coordOne, coordTwo));
+        }
+
+        [Fact]
+        public void DistanceBetweenPoints_CoordTwoNull_ArgumentException()
+        {
+            //Arrange
+            var helper = GetCoordinateHelper();
+            Coordinate coordOne = null;
+            Coordinate coordTwo = new Coordinate(3, 4, false);
+
+            //Act && Assert
+            Assert.Throws<ArgumentException>(() => helper.DistanceBetweenPoints(coordOne, coordTwo));
+        }
+
+        [Fact]
+        public void TotalRouteDistance_Success()
+        {
+            //Arrange
+            var helper = GetCoordinateHelper();
+            List<Coordinate> route = new List<Coordinate>(){
+                new Coordinate(0, 0, true),
+                new Coordinate(0, 1, false),
+                new Coordinate(1, 1, false),
+                new Coordinate(0, 1, false)
+            };
+
+            //Act
+            var distance = helper.TotalRouteDistance(route);
+
+            //Assert
+            Assert.Equal(4, distance);
+        }
+
+        [Fact]
+        public void TotalRouteDistance_NullRoute_ArgumentException()
+        {
+            //Arrange
+            var helper = GetCoordinateHelper();
+            List<Coordinate> route = null;
+
+            //Act & Assert
+            Assert.Throws<ArgumentException>(() => helper.TotalRouteDistance(route));
+        }
     }
 }
