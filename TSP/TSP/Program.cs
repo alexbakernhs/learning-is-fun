@@ -14,9 +14,12 @@
 
             IServiceCollection services = new ServiceCollection();
 
+
             services.AddTransient<IConfigurationBuilderWrapper, ConfigurationBuilderWrapper>();
             services.AddTransient<ICoordinateHelper, CoordinateHelper>();
+            services.AddTransient<IRouteHelper, RouteHelper>();
             services.AddTransient<IRandomWrapper, RandomWrapper>();
+            services.AddTransient<TspRunner>();
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 

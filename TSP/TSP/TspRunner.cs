@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TSP
 {
@@ -15,6 +16,8 @@ namespace TSP
         public void Run()
         {
             BruteForce bruteForce = new BruteForce(_routeHelper);
+            var coords = _coordinateHelper.GenerateCoords().ToList();
+            bruteForce.Run(coords);
         }
     }
 }

@@ -15,5 +15,10 @@ namespace TSP
             }
             return false;
         }
+
+        public static string PrintCoordinate(this Coordinate coord)
+        {
+            return $"({coord.X.ToString()}, {coord.Y.ToString()})";
+        }
     }
 }

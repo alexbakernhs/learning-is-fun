@@ -168,35 +168,5 @@ namespace Tests
             //Act && Assert
             Assert.Throws<ArgumentException>(() => helper.DistanceBetweenPoints(coordOne, coordTwo));
         }
-
-        [Fact]
-        public void TotalRouteDistance_Success()
-        {
-            //Arrange
-            var helper = GetCoordinateHelper();
-            List<Coordinate> route = new List<Coordinate>(){
-                new Coordinate(0, 0, true),
-                new Coordinate(0, 1, false),
-                new Coordinate(1, 1, false),
-                new Coordinate(0, 1, false)
-            };
-
-            //Act
-            var distance = helper.TotalRouteDistance(route);
-
-            //Assert
-            Assert.Equal(4, distance);
-        }
-
-        [Fact]
-        public void TotalRouteDistance_NullRoute_ArgumentException()
-        {
-            //Arrange
-            var helper = GetCoordinateHelper();
-            List<Coordinate> route = null;
-
-            //Act & Assert
-            Assert.Throws<ArgumentException>(() => helper.TotalRouteDistance(route));
-        }
     }
 }

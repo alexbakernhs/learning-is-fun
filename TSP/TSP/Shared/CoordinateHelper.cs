@@ -50,19 +50,6 @@ namespace TSP
             }
             return coords;
         }
-
-        public double TotalRouteDistance(List<Coordinate> route)
-        {
-            if(route == null) throw new ArgumentException("Route cannot be null when trying to calculate distance");
-            double distance = 0;
-            for(int i = 0; i < route.Count(); i++)
-            {
-                var coordOne = route[i];
-                var coordTwo = i == (route.Count() - 1) ? route[0] : route[i + 1];
-                distance += DistanceBetweenPoints(coordOne, coordTwo);
-            }
-            return distance;
-        }
         
         public double DistanceBetweenPoints(Coordinate one, Coordinate two)
         {   

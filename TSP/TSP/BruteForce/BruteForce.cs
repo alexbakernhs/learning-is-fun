@@ -11,7 +11,23 @@ namespace TSP
         }
         public void Run(List<Coordinate> coordinates)
         {
+            double? bestDistance = null;
+            List<Coordinate> bestRoute = null;
             var routes = _routeHelper.GenerateAllPossibleRoutes(coordinates);
+            foreach(var route in routes)
+            {
+                var routeDistance = _routeHelper.TotalRouteDistance(route);
+                if(bestDistance == null || routeDistance < bestDistance)
+                {
+                    bestDistance = routeDistance;
+                    bestRoute = route;
+                }
+            }
+            foreach(var coord in bestRoute)
+            {
+                System.Console.Write(coord.PrintCoordinate());
+            }
+            System.Console.WriteLine(bestDistance);
         }
     }
 }
