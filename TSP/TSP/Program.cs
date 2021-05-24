@@ -16,14 +16,12 @@
 
             services.AddTransient<IConfigurationBuilderWrapper, ConfigurationBuilderWrapper>();
             services.AddTransient<ICoordinateHelper, CoordinateHelper>();
+            services.AddTransient<IRandomWrapper, RandomWrapper>();
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 
             // entry to run app
             serviceProvider.GetService<TspRunner>().Run();
-
-
-            
         }
     }
 }

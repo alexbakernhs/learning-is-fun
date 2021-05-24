@@ -13,5 +13,12 @@ namespace TSP
             Y = y;
             IsStart = isStart;
         }
+
+        public Coordinate(Coordinate coord)
+        {
+            X = coord.X;
+            Y = coord.Y;
+            IsStart = coord.IsStart;
+        }
     }
 }
