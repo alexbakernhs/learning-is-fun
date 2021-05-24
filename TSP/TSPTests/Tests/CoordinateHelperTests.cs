@@ -31,15 +31,11 @@ namespace Tests
                 new int[2]{5,6},
                 new int[2]{7,8}
             });
-            if(!overrideRandomWrapper) _randomWrapper.SetupSequence(s => s.Next(It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(1)
-                .Returns(2)
-                .Returns(3)
-                .Returns(4)
-                .Returns(5)
-                .Returns(6)
-                .Returns(7)
-                .Returns(8);
+            if(!overrideRandomWrapper) _randomWrapper.SetupSequence(s => s.Next(It.IsAny<List<Coordinate>>(), It.IsAny<int>()))
+                .Returns(new Coordinate(1, 2, false))
+                .Returns(new Coordinate(3, 4, false))
+                .Returns(new Coordinate(5, 6, false))
+                .Returns(new Coordinate(7, 8, false));
         }
 
         private CoordinateHelper GetCoordinateHelper(bool overrideConfigWrapper = false, bool overrideRandomWrapper = false)
@@ -86,23 +82,10 @@ namespace Tests
         }
 
         [Fact]
-        public void GenerateCoords_GenerateRandom_NoDuplicates()
+        public void GenerateCoords_GenerateRandomEndlessLoop_ExceptionCaught()
         {
-            //Arrange
             var helper = GetCoordinateHelper(false, true);
-            _randomWrapper.SetupSequence(s => s.Next(It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(1)
-                .Returns(2)
-                .Returns(1)
-                .Returns(2)
-                .Returns(3)
-                .Returns(4);
 
-            //Act
-            var coords = helper.GenerateCoords(true, 2, 0, 4, 0, 4);
-
-            //Assert
-            Assert.False(coords.DoesHaveDuplicates());
         }
     }
 }
