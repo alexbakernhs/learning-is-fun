@@ -4,12 +4,12 @@ namespace TSP
 {
     public class BruteForce
     {
-        public void Run()
+        public void Run(List<Coordinate> coordinates)
         {
-
+            
         }
 
-        public void GenerateAllRoutes(List<Coordinate> coordiantes)
+        public void GenerateAllRoutes(List<Coordinate> coordinates)
         {
             
         }

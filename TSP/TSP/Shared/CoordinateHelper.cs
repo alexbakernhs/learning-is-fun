@@ -6,12 +6,13 @@ namespace TSP
     {
         public IEnumerable<Coordinate> GenerateCoords(bool random = false, int size = 0)
         {
+
             return new List<Coordinate>();
         }
 
-        public void TotalRouteDistance()
+        public double TotalRouteDistance()
         {
-
+            throw new NotImplementedException();
         }
         
         public double DistanceBetweenPoints(Coordinate one, Coordinate two)
