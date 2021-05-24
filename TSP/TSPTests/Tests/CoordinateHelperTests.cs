@@ -82,10 +82,53 @@ namespace Tests
         }
 
         [Fact]
-        public void GenerateCoords_GenerateRandomEndlessLoop_ExceptionCaught()
+        public void GenerateCoords_GenerateRandomTooManyPointsExpected_ArgumentException()
         {
-            var helper = GetCoordinateHelper(false, true);
-
+            //Arrange
+            var helper = GetCoordinateHelper(false, false);
+            
+            //Act & Assert
+            Assert.Throws<ArgumentException>(() => helper.GenerateCoords(true, 15, 0, 2, 0, 3));
         }
+
+        [Fact]
+        public void GenerateCoords_AppSettingsCoords_IsFirstTrueOnFirst()
+        {
+            //Arrange
+            var helper = GetCoordinateHelper(false, false);
+
+            //Act
+            var coords = helper.GenerateCoords();
+
+            //Assert
+            Assert.True(coords.First().IsStart);
+        }
+        
+        [Fact]
+        public void GenerateCoords_RandomGeneration_IsFirstTrueOnFirst()
+        {
+            //Arrange
+            var helper = GetCoordinateHelper(false, false);
+
+            //Act
+            var coords = helper.GenerateCoords(true, 2, 0, 10, 0, 10);
+
+            //Assert
+            Assert.True(coords.First().IsStart);
+        }
+
+        [Fact]
+        public void GenerateCoords_AnyGeneration_OnlyOneIsFirst()
+        {
+            //Arrange
+            var helper = GetCoordinateHelper(false, false);
+
+            //Act
+            var coords = helper.GenerateCoords(true, 2, 0, 10, 0, 10);
+
+            //Assert
+            Assert.Single(coords.Where(w => w.IsStart));
+        }
+
     }
 }
