@@ -37,16 +37,16 @@ namespace Tests
             var routeHelper = GetRouteHelper();
             var coordinates = new List<Coordinate>(){
                 new Coordinate(0,0,true),
-                new Coordinate(0,1,true),
-                new Coordinate(1,1,true),
-                new Coordinate(2,2,true),
-                new Coordinate(4,4,true)
+                new Coordinate(0,1,false),
+                new Coordinate(1,1,false),
+                new Coordinate(2,2,false),
+                new Coordinate(4,4,false)
             };
             //Act
             var routes = routeHelper.GenerateAllPossibleRoutes(coordinates);
 
             //Assert
-            Assert.Equal(120, routes.Count());
+            Assert.Equal(24, routes.Count());
         }
 
         [Fact]
@@ -58,7 +58,8 @@ namespace Tests
                 new Coordinate(0, 0, true),
                 new Coordinate(0, 1, false),
                 new Coordinate(1, 1, false),
-                new Coordinate(0, 1, false)
+                new Coordinate(0, 1, false),
+                new Coordinate(0, 0, true),
             };
 
             //Act
@@ -77,6 +78,26 @@ namespace Tests
 
             //Act & Assert
             Assert.Throws<ArgumentException>(() => helper.TotalRouteDistance(route));
+        }
+        
+        [Fact]
+        public void GenerateRandomRoute_Success()
+        {
+            //Arrange
+            var helper  = GetRouteHelper();
+            List<Coordinate> coords = new List<Coordinate>()
+            {
+                new Coordinate(0,0,true),
+                new Coordinate(1,1,false),
+                new Coordinate(2,2,false),
+                new Coordinate(3,3,false)
+            };
+
+            //Act
+            var route = helper.GenerateRandomRoute(coords);
+
+            //Assert
+            Assert.Equal(5, route.Count);
         }
     }
 }

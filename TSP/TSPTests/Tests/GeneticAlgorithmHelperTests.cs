@@ -9,11 +9,10 @@ namespace Tests
 
     public class GeneticAlgorithmHelperTests
     {
-        private Mock<IRouteHelper> _routeHelper;
         private Mock<IConfigurationBuilderWrapper> _config;
         private Mock<IRandomWrapper> _random;
         private CoordinateHelper _coordHelper;
-
+        private Mock<IRouteHelper> _routeHelper;
         private GeneticAlgorithmHelper GetAlgoHelper()
         {
             InitialiseMocks();
@@ -56,12 +55,89 @@ namespace Tests
                 new Coordinate(3,3,false),
                 new Coordinate(4,4,false)
             };
+            int popSize = 10;
 
             //Act
-            var population = helper.GenerateInitialPopulation(coords, 10);
+            var population = helper.GenerateInitialPopulation(coords, popSize);
             
             //Assert
             Assert.Equal(10, population.Count());
         }
+
+        [Fact]
+        public void GenerateInitialPopulation_CoordsNull_ArgumentException()
+        {
+            //Arrange
+            var helper = GetAlgoHelper();
+            List<Coordinate> coords = null;
+            int popSize = 10;
+
+            //Act & Assert
+            Assert.Throws<ArgumentException>(() => helper.GenerateInitialPopulation(coords, popSize));
+        }
+
+        [Fact]
+        public void GenerateInitialPopulation_populationSizeSmallerThan3_ArgumentException()
+        {
+            //Arrange
+            var helper = GetAlgoHelper();
+            var coords = new List<Coordinate>()
+            {
+                new Coordinate(0,0,true),
+                new Coordinate(1,1,false),
+                new Coordinate(2,2,false),
+                new Coordinate(3,3,false),
+                new Coordinate(4,4,false)
+            };
+            int popSize = 2;
+
+            //Act && Assert
+            Assert.Throws<ArgumentException>(() => helper.GenerateInitialPopulation(coords, popSize));
+        }
+
+        [Fact]
+        public void GetFittest_Success()
+        {
+            //Arrange
+            var helper = GetAlgoHelper();
+            var population = new List<List<Coordinate>>()
+            {
+                new List<Coordinate>{      
+                    new Coordinate(1,2,true),
+                    new Coordinate(8,2,false),
+                    new Coordinate(3,4,false),
+                    new Coordinate(6,3,false)
+                },
+                new List<Coordinate>{      
+                    new Coordinate(1,2,true),
+                    new Coordinate(3,4,false),
+                    new Coordinate(8,2,false),
+                    new Coordinate(6,3,false)
+                },
+            };
+
+            //Act
+            var fittest = helper.GetFittest(population);
+
+            //Assert
+            Assert.True(fittest.Equals(population[1]));
+        }
+
+        [Fact]
+        public void GetFittest_PopulationNull_ArgumentException()
+        {
+            //Arrange
+            var helper = GetAlgoHelper();
+            List<List<Coordinate>> population = null;
+
+            //Act && Assert
+            Assert.Throws<ArgumentException>(() => helper.GetFittest(population));
+        }
+
+        [Fact]
+        public void RunTournament_Success()
+        {
+            
+        }   
     }
 }
