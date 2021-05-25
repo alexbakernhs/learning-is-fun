@@ -33,6 +33,21 @@ namespace TSP
             return $"({coord.X.ToString()}, {coord.Y.ToString()})";
         }
 
+        public static bool Equals(this Coordinate coord, Coordinate coordComparison)
+        {
+            if(coord.X != coordComparison.X || coord.Y != coordComparison.Y) return false;
+            else return true;
+        }
+
+        public static bool IsInList(this Coordinate coordinate, List<Coordinate> comparison)
+        {
+            foreach(var coord in comparison)
+            {
+                if(coordinate.Equals(coord)) return true;
+            }
+            return false;
+        }
+
         public static bool Equals(this List<Coordinate> coords, List<Coordinate> coordsComparison)
         {
             int counter = 0;

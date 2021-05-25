@@ -13,17 +13,19 @@ namespace TSP
         private readonly IRouteHelper _routeHelper;
         private readonly ILogger<TspRunner> _logger;
 
-        public TspRunner(ICoordinateHelper coordinateHelper, IRouteHelper routeHelper, ILogger<TspRunner> logger)
+        private readonly IGeneticAlgorithmHelper _gaHelper;
+
+        public TspRunner(ICoordinateHelper coordinateHelper, IRouteHelper routeHelper, ILogger<TspRunner> logger, IGeneticAlgorithmHelper gaHelper)
         {
             _coordinateHelper = coordinateHelper;
             _routeHelper = routeHelper;
             _logger = logger;
+            _gaHelper = gaHelper;
         }
 
         public void Run()
         {
-
-            BruteForce bruteForce = new BruteForce(_routeHelper, _logger);
+            //BruteForce bruteForce = new BruteForce(_routeHelper, _logger);
             var coords = _coordinateHelper.GenerateCoords().ToList(); //Coords from appsettings
             //var coords = _coordinateHelper.GenerateCoords(true, 10, 0, 10, 0, 10).ToList(); //Coords made at random
 
@@ -31,9 +33,15 @@ namespace TSP
             bruteForceSw.Start();
             
             _logger.LogInformation($"Brute Force Program begin running for coords: {coords.PrintCoordinates()}");
-            bruteForce.Run(coords);
+            //bruteForce.Run(coords);
             bruteForceSw.Stop();
             _logger.LogInformation($"Brute Force Finished running in {GetElapsedTimeFromTimeSpan(bruteForceSw.Elapsed)}");
+        
+            GA genetic = new GA(_gaHelper, _routeHelper);
+
+            _logger.LogInformation($"GA begin running");
+            genetic.Run(coords);
+            
         }
 
         private string GetElapsedTimeFromTimeSpan(TimeSpan ts)

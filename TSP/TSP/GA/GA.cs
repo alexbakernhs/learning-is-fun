@@ -7,9 +7,11 @@ namespace TSP
     public class GA
     {
         private readonly IGeneticAlgorithmHelper _gaHelper;
-        public GA(IGeneticAlgorithmHelper gaHelper)
+        private readonly IRouteHelper _routeHelper;
+        public GA(IGeneticAlgorithmHelper gaHelper, IRouteHelper routeHelper)
         {
             _gaHelper = gaHelper;
+            _routeHelper = routeHelper;
         }
         public List<List<Coordinate>> CurrentPopulation;
         public double MutationRate = 0.01;
@@ -20,7 +22,18 @@ namespace TSP
 
         public void Run(List<Coordinate> coords)
         {
-            
+            var fittest = new List<Coordinate>();
+
+            for(int i = 0; i < GenerationSize; i++)
+            {
+                if(CurrentPopulation == null)
+                {
+                    CurrentPopulation = _gaHelper.GenerateInitialPopulation(coords, PopulationSize);
+                }
+                fittest = _gaHelper.GetFittest(CurrentPopulation);
+                Console.WriteLine($"{fittest.PrintCoordinates()} {_routeHelper.TotalRouteDistance(fittest)}");
+                CurrentPopulation = EvolvePopulation(CurrentPopulation);
+            }
         }
 
         private List<List<Coordinate>> EvolvePopulation(List<List<Coordinate>> population)

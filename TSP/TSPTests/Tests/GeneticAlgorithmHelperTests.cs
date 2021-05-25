@@ -17,7 +17,7 @@ namespace Tests
         {
             InitialiseMocks();
             MockSetups();
-            return new GeneticAlgorithmHelper(_routeHelper.Object);
+            return new GeneticAlgorithmHelper(_routeHelper.Object, _random.Object);
         }
 
         private void InitialiseMocks()
@@ -135,9 +135,84 @@ namespace Tests
         }
 
         [Fact]
-        public void RunTournament_Success()
+        public void RunTournament_PopulationNull_ArgumentException()
         {
-            
+            //Arrange
+            var helper = GetAlgoHelper();
+            List<List<Coordinate>> population = null;
+
+            //Act && Assert
+            Assert.Throws<ArgumentException>(() => helper.RunTournament(population, 10));
         }   
+
+        [Fact]
+        public void RunTournament_TorunamentSizeLessThan2_ArgumentException()
+        {
+            //Arrange
+            var helper = GetAlgoHelper();
+            var population = new List<List<Coordinate>>()
+            {
+                new List<Coordinate>{      
+                    new Coordinate(1,2,true),
+                    new Coordinate(8,2,false),
+                    new Coordinate(3,4,false),
+                    new Coordinate(6,3,false)
+                },
+                new List<Coordinate>{      
+                    new Coordinate(1,2,true),
+                    new Coordinate(3,4,false),
+                    new Coordinate(8,2,false),
+                    new Coordinate(6,3,false)
+                },
+            };
+
+            //Act && Assert
+            Assert.Throws<ArgumentException>(() => helper.RunTournament(population, 1));
+        }
+
+        [Fact]
+        public void RunCrossover_Success()
+        {
+            //Arrange
+            var helper = GetAlgoHelper();
+            _random.SetupSequence(s => s.Next(It.IsAny<int>(), It.IsAny<int>()))
+            .Returns(2)
+            .Returns(4);
+            var parentOne = new List<Coordinate>
+            {
+                new Coordinate(0, 0, true),
+                new Coordinate(1, 1, false),
+                new Coordinate(2, 2, false),
+                new Coordinate(3, 3, false),
+                new Coordinate(4, 4, false),
+                new Coordinate(5, 5, false),
+            };
+            var parentTwo = new List<Coordinate>
+            {
+                new Coordinate(6, 6, true),
+                new Coordinate(7, 7, false),
+                new Coordinate(8, 8, false),
+                new Coordinate(9, 9, false),
+                new Coordinate(10, 10, false),
+                new Coordinate(11, 11, false),
+            };
+            var expectedChild = new List<Coordinate>
+            {
+                new Coordinate(0, 0, true),
+                new Coordinate(1, 1, false),
+                new Coordinate(8, 8, false),
+                new Coordinate(9, 9, false),
+                new Coordinate(10, 10, false),
+                new Coordinate(5, 5, false),
+            };
+
+            //Act
+            var child = helper.RunCrossover(parentOne, parentTwo);
+
+            var result = child.Equals(coordsComparison: expectedChild);
+
+            //Assert
+            Assert.True(result);
+        }
     }
 }

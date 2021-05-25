@@ -12,5 +12,11 @@ namespace TSP
             Coordinate coordinate = new Coordinate(coords[index]);
             return coordinate;
         }
+
+        public int Next(int min, int max)
+        {
+            Random random = new Random();
+            return random.Next(min, max);
+        }
     }
 }
