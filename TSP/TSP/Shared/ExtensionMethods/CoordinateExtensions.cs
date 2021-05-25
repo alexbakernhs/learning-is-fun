@@ -32,5 +32,16 @@ namespace TSP
         {
             return $"({coord.X.ToString()}, {coord.Y.ToString()})";
         }
+
+        public static bool Equals(this List<Coordinate> coords, List<Coordinate> coordsComparison)
+        {
+            int counter = 0;
+            foreach(var coord in coords)
+            {
+                if(coord.X != coordsComparison[counter].X || coord.Y != coordsComparison[counter].Y) return false;
+                counter++;
+            }
+            return true;
+        }
     }
 }

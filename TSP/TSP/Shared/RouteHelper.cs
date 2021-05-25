@@ -19,16 +19,22 @@ namespace TSP
             List<int> indexes = new List<int>();
             for(int i = 0; i < coords.Count; i++)
             {
-                indexes.Add(i);
+                if(!coords[i].IsStart)
+                {
+                    indexes.Add(i);
+                }
             }
             
             foreach (var permu in Permutate(indexes, indexes.Count))
             {
                 List<Coordinate> route = new List<Coordinate>();
+                Coordinate first = coords.FirstOrDefault(s => s.IsStart);
+                route.Add(first);
                 foreach (var i in permu)
                 {
                     route.Add(coords[i]);
                 }
+                route.Add(first);
                 RouteCounter.Inc();
                 routes.Add(route);
             }
@@ -60,13 +66,40 @@ namespace TSP
         {
             if(route == null) throw new ArgumentException("Route cannot be null when trying to calculate distance");
             double distance = 0;
-            for(int i = 0; i < route.Count(); i++)
+            for(int i = 0; i < route.Count() - 1; i++)
             {
                 var coordOne = route[i];
-                var coordTwo = i == (route.Count() - 1) ? route[0] : route[i + 1];
+                var coordTwo = route[i + 1];
                 distance += _coordinateHelper.DistanceBetweenPoints(coordOne, coordTwo);
             }
             return distance;
+        }
+
+        public List<Coordinate> GenerateRandomRoute(List<Coordinate> coords)
+        {
+            var route = new List<Coordinate>();
+            var start = coords.FirstOrDefault(s => s.IsStart);
+            route.Add(start);
+
+            List<int> indexes = new List<int>();
+            for(int i = 0; i < coords.Count; i++)
+            {
+                if(!coords[i].IsStart)
+                {
+                    indexes.Add(i);
+                }
+            }
+            Random random = new Random();
+            var count = indexes.Count();
+            while(indexes.Count > 0)
+            {
+                int index = random.Next(0, indexes.Count);
+                route.Add(coords[indexes[index]]);
+                indexes.RemoveAt(index);
+            }
+            route.Add(start);
+
+            return route;
         }
     }
 }
