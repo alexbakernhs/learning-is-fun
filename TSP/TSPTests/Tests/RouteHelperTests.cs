@@ -9,11 +9,32 @@ namespace Tests
 
     public class RouteHelperTests
     {
+        private Mock<IConfigurationBuilderWrapper> _config;
+        private Mock<IRandomWrapper> _randomWrapper;
+
+        private RouteHelper GetRouteHelper()
+        {
+            InitialiseMocks();
+            MockSetups();
+            return new RouteHelper(new CoordinateHelper(_config.Object, _randomWrapper.Object));
+        }
+
+        private void InitialiseMocks()
+        {
+            _randomWrapper = new Mock<IRandomWrapper>();
+            _config = new Mock<IConfigurationBuilderWrapper>();
+
+        }
+
+        private void MockSetups()
+        {
+        }
+
         [Fact]
         public void GenerateAllPossibleRoutes_Success()
         {
             //Arrange
-            var routeHelper = new RouteHelper();
+            var routeHelper = GetRouteHelper();
             var coordinates = new List<Coordinate>(){
                 new Coordinate(0,0,true),
                 new Coordinate(0,1,true),
@@ -28,11 +49,11 @@ namespace Tests
             Assert.Equal(120, routes.Count());
         }
 
-                [Fact]
+        [Fact]
         public void TotalRouteDistance_Success()
         {
             //Arrange
-            var helper = GetCoordinateHelper();
+            var helper = GetRouteHelper();
             List<Coordinate> route = new List<Coordinate>(){
                 new Coordinate(0, 0, true),
                 new Coordinate(0, 1, false),
@@ -51,7 +72,7 @@ namespace Tests
         public void TotalRouteDistance_NullRoute_ArgumentException()
         {
             //Arrange
-            var helper = GetCoordinateHelper();
+            var helper = GetRouteHelper();
             List<Coordinate> route = null;
 
             //Act & Assert

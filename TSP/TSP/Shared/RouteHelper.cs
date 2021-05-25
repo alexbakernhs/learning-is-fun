@@ -3,10 +3,12 @@ namespace TSP
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Prometheus;
 
     public class RouteHelper : IRouteHelper
     {
         private readonly ICoordinateHelper _coordinateHelper;
+        private static readonly Counter RouteCounter = Metrics.CreateCounter("route_counter", "Route Counter");
         public RouteHelper(ICoordinateHelper coordinateHelper)
         {
             _coordinateHelper = coordinateHelper;
@@ -27,6 +29,7 @@ namespace TSP
                 {
                     route.Add(coords[i]);
                 }
+                RouteCounter.Inc();
                 routes.Add(route);
             }
             return routes;
