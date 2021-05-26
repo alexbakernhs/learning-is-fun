@@ -3,15 +3,19 @@ namespace TSP
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.Extensions.Logging;
 
     public class GA
     {
         private readonly IGeneticAlgorithmHelper _gaHelper;
         private readonly IRouteHelper _routeHelper;
-        public GA(IGeneticAlgorithmHelper gaHelper, IRouteHelper routeHelper)
+        private readonly ILogger<TspRunner> _logger;
+
+        public GA(IGeneticAlgorithmHelper gaHelper, IRouteHelper routeHelper, ILogger<TspRunner> logger)
         {
             _gaHelper = gaHelper;
             _routeHelper = routeHelper;
+            _logger = logger;
         }
         public List<List<Coordinate>> CurrentPopulation;
         public double MutationRate = 0.01;
@@ -31,7 +35,9 @@ namespace TSP
                     CurrentPopulation = _gaHelper.GenerateInitialPopulation(coords, PopulationSize);
                 }
                 fittest = _gaHelper.GetFittest(CurrentPopulation);
-                Console.WriteLine($"{fittest.PrintCoordinates()} {_routeHelper.TotalRouteDistance(fittest)}");
+                
+                _logger.LogInformation($"{fittest.PrintCoordinates()} {_routeHelper.TotalRouteDistance(fittest)}");
+
                 CurrentPopulation = EvolvePopulation(CurrentPopulation);
             }
         }
@@ -47,15 +53,20 @@ namespace TSP
 
             for(int i = Elitism ? 1 : 0; i < population.Count(); i++)
             {
-                List<Coordinate> parentOne = _gaHelper.RunTournament(population, 5);
-                List<Coordinate> parentTwo = _gaHelper.RunTournament(population, 5);
-
-                List<Coordinate> child = _gaHelper.RunCrossover(parentOne, parentTwo);
+                var child = RunCrossoverOnTournamentWinners(population, TournamentSize);
                 newPopulation.Add(child);
             }
 
             newPopulation = _gaHelper.RunMutation(newPopulation, 0.05);
             return newPopulation;
+        }
+
+        private List<Coordinate> RunCrossoverOnTournamentWinners(List<List<Coordinate>> population, int tournamentSize)
+        {
+            List<Coordinate> parentOne = _gaHelper.RunTournament(population, 5);
+            List<Coordinate> parentTwo = _gaHelper.RunTournament(population, 5);
+
+            return _gaHelper.RunCrossover(parentOne, parentTwo);
         }
     }
 }

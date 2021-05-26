@@ -26,14 +26,14 @@ namespace TSP
         public void Run()
         {
             BruteForce bruteForce = new BruteForce(_routeHelper, _logger);
-            var coords = _coordinateHelper.GenerateCoords().ToList(); //Coords from appsettings
-            //var coords = _coordinateHelper.GenerateCoords(true, 10, 0, 10, 0, 10).ToList(); //Coords made at random
+            //var coords = _coordinateHelper.GenerateCoords().ToList(); //Coords from appsettings
+            var coords = _coordinateHelper.GenerateCoords(true, 50, 0, 20, 0, 20).ToList(); //Coords made at random
 
             Stopwatch bruteForceSw = new Stopwatch();
             bruteForceSw.Start();
             
             _logger.LogInformation($"Brute Force Program begin running for coords: {coords.PrintCoordinates()}");
-            bruteForce.Run(coords);
+            //bruteForce.Run(coords);
             bruteForceSw.Stop();
             _logger.LogInformation($"Brute Force Finished running in {GetElapsedTimeFromTimeSpan(bruteForceSw.Elapsed)}");
         

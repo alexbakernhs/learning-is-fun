@@ -22,7 +22,6 @@ namespace TSP
             foreach(var route in routes)
             {
                 var routeDistance = _routeHelper.TotalRouteDistance(route);
-                _logger.LogInformation($"Distance for route {route.PrintCoordinates()} was {routeDistance}");
                 if(bestDistance == null || routeDistance < bestDistance)
                 {
                     bestDistance = routeDistance;
@@ -31,9 +30,9 @@ namespace TSP
                 }
             }
 
-                string message = $"Best Route found: {bestRoute.PrintCoordinates()} with a total distance of {bestDistance}";
-                _logger.LogInformation(message);
-                System.Console.WriteLine(message);
+            string message = $"Best Route found: {bestRoute.PrintCoordinates()} with a total distance of {bestDistance}";
+            _logger.LogInformation(message);
+            System.Console.WriteLine(message);
         }
     }
 }
