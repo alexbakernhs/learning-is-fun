@@ -115,7 +115,7 @@ namespace TSP
                     int indexTwo = -1;
                     while(indexOne == indexTwo || indexTwo == -1)
                     {
-                        indexTwo = _randomWrapper.Next(0,route.Count);
+                        indexTwo = _randomWrapper.Next(1,route.Count - 1);
                     }
                     var newRoute = new List<Coordinate>(route);
                     newRoute[indexTwo] = route[indexOne];
