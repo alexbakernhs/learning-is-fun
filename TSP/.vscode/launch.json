@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/TSP/bin/Debug/net5.0/TSP.dll",
-            "args": [],
+            "args": ["-g", "-a"],
             "cwd": "${workspaceFolder}/TSP",
             "console": "internalConsole",
             "stopAtEntry": false

@@ -53,18 +53,6 @@ namespace TSP
                 indexTwo = _randomWrapper.Next(1,parentOne.Count() - 1);
             }
 
-
-            /*
-                Remove section of parent one using the indexes
-
-                Get the remaining unique coordinates from parent two
-
-                for i is less than the parents size
-
-                if i is between index one and index two then add from the sub section
-                else add from the unique remainders;
-            */
-
             var subsection = parentOne
                 .Where((item, index) => index != 0 && index != parentOne.Count - 1 && (indexOne < indexTwo ? index >= indexOne && index <= indexTwo : index >= indexTwo && index <= indexOne))
                 .ToList();

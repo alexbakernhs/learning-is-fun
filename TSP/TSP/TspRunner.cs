@@ -6,6 +6,7 @@ namespace TSP
     using Microsoft.Extensions.Logging;
     using System.Diagnostics;
     using System;
+    using CommandLine;
 
     public class TspRunner
     {
@@ -23,25 +24,67 @@ namespace TSP
             _gaHelper = gaHelper;
         }
 
-        public void Run()
+        public void Run(string[] args)
         {
-            BruteForce bruteForce = new BruteForce(_routeHelper, _logger);
-            //var coords = _coordinateHelper.GenerateCoords().ToList(); //Coords from appsettings
-            var coords = _coordinateHelper.GenerateCoords(true, 50, 0, 20, 0, 20).ToList(); //Coords made at random
+            CommandLine.Parser.Default.ParseArguments<Options>(args)
+                .WithParsed(RunOptions)
+                .WithNotParsed(HandleParseError);
+        }
 
-            Stopwatch bruteForceSw = new Stopwatch();
-            bruteForceSw.Start();
-            
-            _logger.LogInformation($"Brute Force Program begin running for coords: {coords.PrintCoordinates()}");
-            //bruteForce.Run(coords);
-            bruteForceSw.Stop();
-            _logger.LogInformation($"Brute Force Finished running in {GetElapsedTimeFromTimeSpan(bruteForceSw.Elapsed)}");
-        
-            GA genetic = new GA(_gaHelper, _routeHelper);
+        private void RunOptions(Options opts)
+        {
+            List<Coordinate> coords = new List<Coordinate>();
+            if(opts.Random)
+            {
+                coords = _coordinateHelper.GenerateCoords(true, opts.Size, opts.MinX, opts.MaxX, opts.MinY, opts.MaxY).ToList();
+            }
+            else if(opts.AppSettings)
+            {
+                coords = _coordinateHelper.GenerateCoords().ToList();
+            }
+            else
+            {
+                _logger.LogCritical("Command Line options require one of -r (-random) or -a (-appsettings) so that it can generate coordinates");
+                Console.WriteLine("Command Line options require one of -r (-random) or -a (-appsettings) so that it can generate coordinates");
+                return;
+            }
 
-            _logger.LogInformation($"GA begin running");
-            genetic.Run(coords);
-            
+
+            if(opts.Brute)
+            {
+                BruteForce bruteForce = new BruteForce(_routeHelper, _logger);     
+                Stopwatch sw  = new Stopwatch();
+                sw.Start(); 
+                _logger.LogInformation($"Brute Force Program started for coords: {coords.PrintCoordinates()}");
+                bruteForce.Run(coords);
+                sw.Stop();
+                _logger.LogInformation($"Brute Force Finished running in {GetElapsedTimeFromTimeSpan(sw.Elapsed)}");
+            }
+            else if(opts.GA)
+            {
+                GA genetic = new GA(_gaHelper, _routeHelper, _logger);
+                Stopwatch sw  = new Stopwatch();
+                sw.Start(); 
+                _logger.LogInformation($"Genetic Algorithm started for coords: {coords.PrintCoordinates()}");
+                genetic.Run(coords);
+                sw.Stop();
+                _logger.LogInformation($"Genetic Algorithm Finished running in {GetElapsedTimeFromTimeSpan(sw.Elapsed)}");
+            }
+            else
+            {
+                _logger.LogCritical("Command Line options require one of -g (--genetic) or -b (--brute) so that it can run");
+                Console.WriteLine("Command Line options require one of -g (--genetic) or -b (--brute) so that it can run");
+            }
+        }
+
+        private void HandleParseError(IEnumerable<Error> errs)
+        {
+            _logger.LogCritical("Errors: {0} when trying to run from command line", errs);
+            foreach(var err in errs)
+            {
+                _logger.LogCritical(err.ToString());
+            }
+            Console.WriteLine("Exit code {0}", -1);
         }
 
         private string GetElapsedTimeFromTimeSpan(TimeSpan ts)

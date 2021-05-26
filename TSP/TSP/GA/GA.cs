@@ -21,12 +21,13 @@ namespace TSP
         public double MutationRate = 0.01;
         public int PopulationSize = 100;
         public int GenerationSize = 100;
-        public bool Elitism = false;
+        public bool Elitism = true;
         public int TournamentSize = 5;
 
         public void Run(List<Coordinate> coords)
         {
             var fittest = new List<Coordinate>();
+            double? fittestDistance = null;
 
             for(int i = 0; i < GenerationSize; i++)
             {
@@ -35,9 +36,17 @@ namespace TSP
                     CurrentPopulation = _gaHelper.GenerateInitialPopulation(coords, PopulationSize);
                 }
                 fittest = _gaHelper.GetFittest(CurrentPopulation);
-                
-                _logger.LogInformation($"{fittest.PrintCoordinates()} {_routeHelper.TotalRouteDistance(fittest)}");
 
+                var currentBest = _routeHelper.TotalRouteDistance(fittest);
+
+                if(fittestDistance == null || currentBest < fittestDistance)
+                {
+                    _logger.LogInformation($" New Best Route Found! : {fittest.PrintCoordinates()} {currentBest}");
+                    fittestDistance = currentBest;
+                }else{
+                    _logger.LogInformation($" No Improvement Found in latest generation");
+                }
+            
                 CurrentPopulation = EvolvePopulation(CurrentPopulation);
             }
         }

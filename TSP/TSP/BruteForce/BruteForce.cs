@@ -26,7 +26,7 @@ namespace TSP
                 {
                     bestDistance = routeDistance;
                     bestRoute = route;
-                    _logger.LogInformation($"New Shortest route found, best route updated");
+                    _logger.LogInformation($"New Shortest route found, best route updated {bestRoute.PrintCoordinates()}");
                 }
             }
 
